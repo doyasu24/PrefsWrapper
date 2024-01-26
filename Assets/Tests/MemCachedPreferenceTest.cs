@@ -1,5 +1,6 @@
-﻿using PrefsWrapper.Serializers;
-using RuntimeUnitTestToolkit;
+﻿using NUnit.Framework;
+using PrefsWrapper.Serializers;
+using Assert = UnityEngine.Assertions.Assert;
 
 namespace PrefsWrapper
 {
@@ -13,36 +14,40 @@ namespace PrefsWrapper
             preference.DeleteValue();
         }
 
+        [Test]
         public void DeletedPrefHasNoValue()
         {
             preference.DeleteValue();
-            preference.HasValue.IsFalse();
+            Assert.IsFalse(preference.HasValue);
         }
 
+        [Test]
         public void DeletedPrefReturnDefault()
         {
             preference.DeleteValue();
 
-            preference.GetValueOrDefault().Is(default(int));
-            preference.GetValueOrDefault(1).Is(1);
+            Assert.AreEqual(preference.GetValueOrDefault(), default);
+            Assert.AreEqual(preference.GetValueOrDefault(1), 1);
         }
 
+        [Test]
         public void PrefHasValue()
         {
             preference.DeleteValue();
 
             preference.Value = 1;
-            preference.HasValue.IsTrue();
+            Assert.IsTrue(preference.HasValue);
         }
 
+        [Test]
         public void PrefHasValueReturnValue()
         {
             preference.DeleteValue();
 
             preference.Value = 1;
-            preference.Value.Is(1);
-            preference.GetValueOrDefault().Is(1);
-            preference.GetValueOrDefault(2).Is(1);
+            Assert.AreEqual(preference.Value, 1);
+            Assert.AreEqual(preference.GetValueOrDefault(), 1);
+            Assert.AreEqual(preference.GetValueOrDefault(2), 1);
         }
     }
 }

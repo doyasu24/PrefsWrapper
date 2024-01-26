@@ -1,113 +1,128 @@
-﻿using PrefsWrapper.Encoders;
-using RuntimeUnitTestToolkit;
+﻿using System;
+using NUnit.Framework;
+using PrefsWrapper.Encoders;
 using UnityEngine;
-using System;
 
 namespace PrefsWrapper.Serializers
 {
     public class SerializerTest
     {
+        [Test]
         public void SerializeString()
         {
             var key = "test-string";
             var value = "test";
             var serializer = new StringPrefSerializer();
             serializer.Serialize(key, value);
-            serializer.Deserialize(key).Is(value);
-            PlayerPrefs.HasKey(key).IsTrue();
-            PlayerPrefs.GetString(key).Is(value);
+            Assert.AreEqual(serializer.Deserialize(key), value);
+            Assert.IsTrue(PlayerPrefs.HasKey(key));
+            Assert.AreEqual(PlayerPrefs.GetString(key), value);
         }
 
+        [Test]
         public void SerializeInt()
         {
             var key = "test-int";
             var value = 1;
             var serializer = new IntPrefSerializer();
             serializer.Serialize(key, value);
-            serializer.Deserialize(key).Is(value);
-            PlayerPrefs.HasKey(key).IsTrue();
-            PlayerPrefs.GetInt(key).Is(value);
+            Assert.AreEqual(serializer.Deserialize(key), value);
+            Assert.IsTrue(PlayerPrefs.HasKey(key));
+            Assert.AreEqual(PlayerPrefs.GetInt(key), value);
         }
 
+        [Test]
         public void SerializeFloat()
         {
             var key = "test-float";
             var value = 1f;
             var serializer = new FloatPrefSerializer();
             serializer.Serialize(key, value);
-            serializer.Deserialize(key).Is(value);
-            PlayerPrefs.HasKey(key).IsTrue();
-            PlayerPrefs.GetFloat(key).Is(value);
+            Assert.AreEqual(serializer.Deserialize(key), value);
+            Assert.IsTrue(PlayerPrefs.HasKey(key));
+            Assert.AreEqual(PlayerPrefs.GetFloat(key), value);
         }
 
+        [Test]
         public void SerializeBool()
         {
             var key = "test-bool";
             var value = true;
             var serializer = new BoolPrefSerializer();
             serializer.Serialize(key, value);
-            serializer.Deserialize(key).Is(value);
-            PlayerPrefs.HasKey(key).IsTrue();
-            PlayerPrefs.GetInt(key).Is(1);
+            Assert.AreEqual(serializer.Deserialize(key), value);
+            Assert.IsTrue(PlayerPrefs.HasKey(key));
+            Assert.AreEqual(PlayerPrefs.GetInt(key), 1);
         }
 
+        [Test]
         public void SerializeBinary()
         {
             var key = "test-binary";
             var value = new byte[] { 0x00, 0x01 };
             var serializer = new BinaryPrefSerializer();
             serializer.Serialize(key, value);
-            serializer.Deserialize(key).IsCollection(value);
-            PlayerPrefs.HasKey(key).IsTrue();
-            PlayerPrefs.GetString(key).Is("AAE=");
+            Assert.AreEqual(serializer.Deserialize(key), value);
+            Assert.IsTrue(PlayerPrefs.HasKey(key));
+            Assert.AreEqual(PlayerPrefs.GetString(key), "AAE=");
         }
 
+        [Test]
         public void SerializeJson()
         {
             var key = "test-json";
             var value = Vector3.up;
             var serializer = new JsonPrefSerializer<Vector3>();
             serializer.Serialize(key, value);
-            serializer.Deserialize(key).Is(value);
-            PlayerPrefs.HasKey(key).IsTrue();
-            PlayerPrefs.GetString(key).Is(JsonUtility.ToJson(Vector3.up));
+            Assert.AreEqual(serializer.Deserialize(key), value);
+            Assert.IsTrue(PlayerPrefs.HasKey(key));
+            Assert.AreEqual(PlayerPrefs.GetString(key), JsonUtility.ToJson(Vector3.up));
         }
 
+        [Test]
         public void SerializeEnum()
         {
             var key = "test-enum";
             var value = TestType.Fuga;
             var serializer = new EnumPrefSerializer<TestType>();
             serializer.Serialize(key, value);
-            serializer.Deserialize(key).Is(value);
-            PlayerPrefs.HasKey(key).IsTrue();
-            PlayerPrefs.GetString(key).Is(TestType.Fuga.ToString());
+            Assert.AreEqual(serializer.Deserialize(key), value);
+            Assert.IsTrue(PlayerPrefs.HasKey(key));
+            Assert.AreEqual(PlayerPrefs.GetString(key), TestType.Fuga.ToString());
         }
 
-        public enum TestType { Hoge, Fuga, Piyo }
+        public enum TestType
+        {
+            Hoge,
+            Fuga,
+            Piyo
+        }
 
+        [Test]
         public void SerializeDateTime()
         {
             var key = "test-datetime";
             var value = DateTime.Now;
             var serializer = new DateTimePrefSerializer();
             serializer.Serialize(key, value);
-            serializer.Deserialize(key).Is(value);
-            PlayerPrefs.HasKey(key).IsTrue();
-            PlayerPrefs.GetString(key).Is(value.ToBinary().ToString());
+            Assert.AreEqual(serializer.Deserialize(key), value);
+            Assert.IsTrue(PlayerPrefs.HasKey(key));
+            Assert.AreEqual(PlayerPrefs.GetString(key), value.ToBinary().ToString());
         }
 
+        [Test]
         public void SerializeTimeSpan()
         {
             var key = "test-timespan";
             var value = TimeSpan.FromSeconds(1);
             var serializer = new TimeSpanPrefSerializer();
             serializer.Serialize(key, value);
-            serializer.Deserialize(key).Is(value);
-            PlayerPrefs.HasKey(key).IsTrue();
-            PlayerPrefs.GetString(key).Is(value.Ticks.ToString());
+            Assert.AreEqual(serializer.Deserialize(key), value);
+            Assert.IsTrue(PlayerPrefs.HasKey(key));
+            Assert.AreEqual(PlayerPrefs.GetString(key), value.Ticks.ToString());
         }
 
+        [Test]
         public void EncodeSerialize()
         {
             var key = "test-encode";
@@ -115,9 +130,9 @@ namespace PrefsWrapper.Serializers
             var intEncoder = new IntEncoder();
             var serializer = new EncodeSerializer<int>(new BinaryPrefSerializer(), intEncoder);
             serializer.Serialize(key, value);
-            serializer.Deserialize(key).Is(value);
-            PlayerPrefs.HasKey(key).IsTrue();
-            PlayerPrefs.GetString(key).Is("AQAAAA==");
+            Assert.AreEqual(serializer.Deserialize(key), value);
+            Assert.IsTrue(PlayerPrefs.HasKey(key));
+            Assert.AreEqual(PlayerPrefs.GetString(key), "AQAAAA==");
         }
     }
 }
