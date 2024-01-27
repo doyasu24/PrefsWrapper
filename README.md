@@ -4,8 +4,6 @@ Extensible PlayerPrefs wrapper.
 
 AES encryption support 
 
-PlayerPrefs Editor (EditorWindow) can list up and delete PlayerPrefs.
-
 ## Support types
 - int
 - float
@@ -22,11 +20,13 @@ PlayerPrefs Editor (EditorWindow) can list up and delete PlayerPrefs.
   - ...
   - struct in UnityEngine
 
-# How to Use
+# Install
 
-import PrefsWrapper unitypackage from release page.
+You can add https://github.com/doyasu24/PrefsWrapper.git?path=Assets/Plugins/PrefsWrapper#0.2.0 to Package Manager
 
-see `Assets/Plugins/PrefsWrapper/Examples/Sample.unity` scene.
+or import unitypackage from release page.
+
+see `Assets/Examples/Sample.unity` scene.
 
 # Sample
 
@@ -82,19 +82,6 @@ see `PrefsWrapper.PreferenceFactory`
 
 implement `IPrefsSerializer<T>` and `IEncoder<T>`
 
-
-# Contribute
-
-## Test
-
-Open `RuntimeUnitTestToolkit/UnitTest.unity` scene and `Run All Tests`
-
-[RuntimeUnitTestToolkit](https://github.com/neuecc/RuntimeUnitTestToolkit)
-
 # License
 
 MIT License
-
-EditorWindow is using [sabresaurus/PlayerPrefsEditor](https://github.com/sabresaurus/PlayerPrefsEditor) code with some modified.
-
-plist deserializer is using [animetrics/PlistCS](https://github.com/animetrics/PlistCS) code.
