@@ -6,9 +6,14 @@ AES encryption support
 
 ## Support types
 - int
+- bool
+- byte
+- sbyte
+- char
+- short
+- ushort
 - float
 - string
-- bool
 - byte[]
 - DateTime
 - TimeSpan

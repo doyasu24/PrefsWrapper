@@ -44,6 +44,33 @@ namespace PrefsWrapper.Encoders
         }
 
         [Test]
+        public void ByteEncode()
+        {
+            var encoder = new ByteEncoder();
+            var bytes = encoder.Encode(1);
+            CollectionAssert.AreEqual(bytes, new byte[] { 0x01 });
+            Assert.AreEqual(encoder.Decode(bytes), (byte)1);
+        }
+        
+        [Test]
+        public void SByteEncode()
+        {
+            var encoder = new SByteEncoder();
+            {
+                // plus
+                var bytes = encoder.Encode(1);
+                CollectionAssert.AreEqual(bytes, new byte[] { 128 + 1 });
+                Assert.AreEqual(encoder.Decode(bytes), (sbyte)1);
+            }
+            {
+                // minus
+                var bytes = encoder.Encode(-1);
+                CollectionAssert.AreEqual(bytes, new byte[] { 128 - 1 });
+                Assert.AreEqual(encoder.Decode(bytes), (sbyte)-1);
+            }
+        }
+
+        [Test]
         public void NopEncode()
         {
             var encoder = new NopEncoder();

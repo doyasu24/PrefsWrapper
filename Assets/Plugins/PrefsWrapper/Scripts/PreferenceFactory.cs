@@ -28,6 +28,31 @@ namespace PrefsWrapper
             return CreatePref(new BoolPrefSerializer(), key, enableMemCachePref);
         }
 
+        public static IPreference<byte> CreateBytePref(string key, bool enableMemCachePref = true)
+        {
+            return CreatePref(new BytePrefSerializer(), key, enableMemCachePref);
+        }
+
+        public static IPreference<sbyte> CreateSBytePref(string key, bool enableMemCachePref = true)
+        {
+            return CreatePref(new SBytePrefSerializer(), key, enableMemCachePref);
+        }
+
+        public static IPreference<char> CreateCharPref(string key, bool enableMemCachePref = true)
+        {
+            return CreatePref(new CharPrefSerializer(), key, enableMemCachePref);
+        }
+
+        public static IPreference<short> CreateShortPref(string key, bool enableMemCachePref = true)
+        {
+            return CreatePref(new ShortPrefSerializer(), key, enableMemCachePref);
+        }
+
+        public static IPreference<ushort> CreateUShortPref(string key, bool enableMemCachePref = true)
+        {
+            return CreatePref(new UShortPrefSerializer(), key, enableMemCachePref);
+        }
+
         public static IPreference<byte[]> CreateBinaryPref(string key, bool enableMemCachePref = true)
         {
             return CreatePref(new BinaryPrefSerializer(), key, enableMemCachePref);
@@ -89,6 +114,31 @@ namespace PrefsWrapper
         public static IPreference<bool> CreateBoolCryptoPref(string key, string password, string salt)
         {
             return CreateCryptoPref(key, password, salt, new BoolEncoder());
+        }
+
+        public static IPreference<byte> CreateByteCryptoPref(string key, string password, string salt)
+        {
+            return CreateCryptoPref(key, password, salt, new ByteEncoder());
+        }
+
+        public static IPreference<sbyte> CreateSByteCryptoPref(string key, string password, string salt)
+        {
+            return CreateCryptoPref(key, password, salt, new SByteEncoder());
+        }
+
+        public static IPreference<char> CreateCharCryptoPref(string key, string password, string salt)
+        {
+            return CreateCryptoPref(key, password, salt, new CharEncoder());
+        }
+
+        public static IPreference<short> CreateShortCryptoPref(string key, string password, string salt)
+        {
+            return CreateCryptoPref(key, password, salt, new ShortEncoder());
+        }
+
+        public static IPreference<ushort> CreateUShortCryptoPref(string key, string password, string salt)
+        {
+            return CreateCryptoPref(key, password, salt, new UShortEncoder());
         }
 
         public static IPreference<byte[]> CreateBinaryCryptoPref(string key, string password, string salt)
