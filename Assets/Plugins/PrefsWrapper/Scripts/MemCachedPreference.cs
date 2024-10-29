@@ -8,6 +8,8 @@ namespace PrefsWrapper
     {
         private readonly string _key;
         private readonly IPrefSerializer<T> _serializer;
+
+        private bool _loaded; // _cache, _hasValueがロードされたかどうか
         private T _cache;
         private bool _hasValue;
 
@@ -15,18 +17,23 @@ namespace PrefsWrapper
         {
             _key = key;
             _serializer = serializer;
-            _hasValue = PlayerPrefs.HasKey(key);
-            _cache = HasValue ? serializer.Deserialize(key) : default;
         }
 
-        public bool HasValue => _hasValue;
+        public bool HasValue
+        {
+            get
+            {
+                TryLoadOnce();
+                return _hasValue;
+            }
+        }
 
         public T Value
         {
             get
             {
-                if (HasValue)
-                    return _cache;
+                TryLoadOnce();
+                if (_hasValue) return _cache;
                 throw new InvalidOperationException();
             }
             set
@@ -34,17 +41,20 @@ namespace PrefsWrapper
                 _serializer.Serialize(_key, value);
                 _hasValue = true;
                 _cache = value;
+                _loaded = true;
             }
         }
 
         public T GetValueOrDefault()
         {
-            return _cache;
+            TryLoadOnce();
+            return _hasValue ? _cache : default;
         }
 
         public T GetValueOrDefault(T defaultValue)
         {
-            return HasValue ? _cache : defaultValue;
+            TryLoadOnce();
+            return _hasValue ? _cache : defaultValue;
         }
 
         public void DeleteValue()
@@ -52,6 +62,19 @@ namespace PrefsWrapper
             PlayerPrefs.DeleteKey(_key);
             _cache = default;
             _hasValue = false;
+            _loaded = true;
+        }
+
+        private void TryLoadOnce()
+        {
+            if (_loaded) return;
+            _hasValue = PlayerPrefs.HasKey(_key);
+            if (_hasValue)
+            {
+                _cache = _serializer.Deserialize(_key);
+            }
+
+            _loaded = true;
         }
 
         public override string ToString()
