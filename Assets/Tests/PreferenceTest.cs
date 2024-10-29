@@ -6,48 +6,48 @@ namespace PrefsWrapper
 {
     public class PreferenceTest
     {
-        readonly IPreference<int> preference;
+        private readonly IPreference<int> _preference;
 
         public PreferenceTest()
         {
-            preference = new Preference<int>("preference-test", new IntPrefSerializer());
-            preference.DeleteValue();
+            _preference = new Preference<int>("preference-test", new IntPrefSerializer());
+            _preference.DeleteValue();
         }
 
         [Test]
         public void DeletedPrefHasNoValue()
         {
-            preference.DeleteValue();
-            Assert.IsFalse(preference.HasValue);
+            _preference.DeleteValue();
+            Assert.IsFalse(_preference.HasValue);
         }
 
         [Test]
         public void DeletedPrefReturnDefault()
         {
-            preference.DeleteValue();
+            _preference.DeleteValue();
 
-            Assert.AreEqual(preference.GetValueOrDefault(), default);
-            Assert.AreEqual(preference.GetValueOrDefault(1), 1);
+            Assert.AreEqual(_preference.GetValueOrDefault(), default);
+            Assert.AreEqual(_preference.GetValueOrDefault(1), 1);
         }
 
         [Test]
         public void PrefHasValue()
         {
-            preference.DeleteValue();
+            _preference.DeleteValue();
 
-            preference.Value = 1;
-            Assert.IsTrue(preference.HasValue);
+            _preference.Value = 1;
+            Assert.IsTrue(_preference.HasValue);
         }
 
         [Test]
         public void PrefHasValueReturnValue()
         {
-            preference.DeleteValue();
+            _preference.DeleteValue();
 
-            preference.Value = 1;
-            Assert.AreEqual(preference.Value, 1);
-            Assert.AreEqual(preference.GetValueOrDefault(), 1);
-            Assert.AreEqual(preference.GetValueOrDefault(2), 1);
+            _preference.Value = 1;
+            Assert.AreEqual(_preference.Value, 1);
+            Assert.AreEqual(_preference.GetValueOrDefault(), 1);
+            Assert.AreEqual(_preference.GetValueOrDefault(2), 1);
         }
     }
 }

@@ -6,64 +6,80 @@ namespace PrefsWrapper
 {
     public class MemCachedPreference<T> : IPreference<T>
     {
-        readonly string key;
-        readonly IPrefSerializer<T> serializer;
-        T cache;
-        bool hasValue;
+        private readonly string _key;
+        private readonly IPrefSerializer<T> _serializer;
 
-        public MemCachedPreference(string key, IPrefSerializer<T> serializer, T initialDefaultValue = default(T))
+        private bool _loaded; // _cache, _hasValueがロードされたかどうか
+        private T _cache;
+        private bool _hasValue;
+
+        public MemCachedPreference(string key, IPrefSerializer<T> serializer)
         {
-            this.key = key;
-            this.serializer = serializer;
-            hasValue = PlayerPrefs.HasKey(key);
-            if (HasValue)
-                cache = serializer.Deserialize(key);
-            else
-                cache = initialDefaultValue;
+            _key = key;
+            _serializer = serializer;
         }
 
-        public bool HasValue { get { return hasValue; } }
+        public bool HasValue
+        {
+            get
+            {
+                TryLoadOnce();
+                return _hasValue;
+            }
+        }
 
         public T Value
         {
             get
             {
-                if (HasValue)
-                    return cache;
-                else
-                    throw new InvalidOperationException();
+                TryLoadOnce();
+                if (_hasValue) return _cache;
+                throw new InvalidOperationException();
             }
             set
             {
-                serializer.Serialize(key, value);
-                hasValue = true;
-                cache = value;
+                _serializer.Serialize(_key, value);
+                _hasValue = true;
+                _cache = value;
+                _loaded = true;
             }
         }
 
         public T GetValueOrDefault()
         {
-            return cache;
+            TryLoadOnce();
+            return _hasValue ? _cache : default;
         }
 
         public T GetValueOrDefault(T defaultValue)
         {
-            if (HasValue)
-                return cache;
-            else
-                return defaultValue;
+            TryLoadOnce();
+            return _hasValue ? _cache : defaultValue;
         }
 
         public void DeleteValue()
         {
-            PlayerPrefs.DeleteKey(key);
-            cache = default(T);
-            hasValue = false;
+            PlayerPrefs.DeleteKey(_key);
+            _cache = default;
+            _hasValue = false;
+            _loaded = true;
+        }
+
+        private void TryLoadOnce()
+        {
+            if (_loaded) return;
+            _hasValue = PlayerPrefs.HasKey(_key);
+            if (_hasValue)
+            {
+                _cache = _serializer.Deserialize(_key);
+            }
+
+            _loaded = true;
         }
 
         public override string ToString()
         {
-            return string.Format("[MemCachedPreference: key-{0}, HasValue-{1}, ValueOrDefault-{2}]", key, HasValue, GetValueOrDefault());
+            return $"[MemCachedPreference: key-{_key}, HasValue-{HasValue}, ValueOrDefault-{GetValueOrDefault()}]";
         }
     }
 }

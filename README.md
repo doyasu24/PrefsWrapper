@@ -2,13 +2,18 @@
 
 Extensible PlayerPrefs wrapper.
 
-AES encryption support 
+AES encryption support
 
 ## Support types
 - int
+- bool
+- byte
+- sbyte
+- char
+- short
+- ushort
 - float
 - string
-- bool
 - byte[]
 - DateTime
 - TimeSpan
@@ -22,9 +27,7 @@ AES encryption support
 
 # Install
 
-You can add https://github.com/doyasu24/PrefsWrapper.git?path=Assets/Plugins/PrefsWrapper#0.2.0 to Package Manager
-
-or import unitypackage from release page.
+You can add https://github.com/doyasu24/PrefsWrapper.git?path=Assets/Plugins/PrefsWrapper#1.0.0 to Package Manager.
 
 see `Assets/Examples/Sample.unity` scene.
 
@@ -33,44 +36,47 @@ see `Assets/Examples/Sample.unity` scene.
 ```Sample.cs
 using UnityEngine;
 
-namespace PrefsWrapper
+namespace PrefsWrapper.Examples
 {
     public class Sample : MonoBehaviour
     {
-        void Start()
+        // memory cache preference
+        private readonly IPreference<string> _stringTestPref = PreferenceFactory.CreateStringPref("string-test-key");
+
+        // non-memory cache preference
+        private readonly IPreference<int> _intTestPref = PreferenceFactory.CreateIntPref("int-test-key", enableMemCachePref: false);
+
+        // AES encoding preference
+        private readonly IPreference<Vector3> _cryptoPref = PreferenceFactory.CreateJsonCryptoPref<Vector3>(
+            key: "vector3-crypto-test",
+            password: "password",
+            salt: "salt1234567890"
+        );
+
+        private void Start()
         {
-            // preference
-            IPreference<Vector3> pref = PreferenceFactory.CreateJsonPref<Vector3>(
-                key: "vector3-test"
-            );
+            // call PlayerPrefs.HasKey internally
+            Debug.Log($"HasValue: {_stringTestPref.HasValue}");
 
-            // set value
-            pref.Value = Vector3.up;
+            // call PlayerPrefs.GetString internally
+            Debug.Log($"GetValueOrDefault: {_stringTestPref.GetValueOrDefault("default value")}");
+            
+            // call PlayerPrefs.DeleteKey internally
+            _stringTestPref.DeleteValue();
 
-            // Value: (0.0, 1.0, 0.0)
-            Debug.Log("Value: " + pref.Value);
+            // call PlayerPrefs.SetString internally and set value to memory cache
+            _stringTestPref.Value = "test";
+            
+            // get value from memory cache
+            Debug.Log($"Value: {_stringTestPref.Value}");
+            
 
-            // delete
-            pref.DeleteValue();
-
-            // GetValueOrDefault: (0.0, -1.0, 0.0)
-            Debug.Log("GetValueOrDefault: " + pref.GetValueOrDefault(Vector3.down));
-
-            // AES encoding preference
-            IPreference<Vector3> cryptoPref = PreferenceFactory.CreateJsonCryptoPref<Vector3>(
-                key: "vector3-crypto-test",
-                password: "password",
-                salt: "salt1234567890"
-            );
-
-            cryptoPref.Value = Vector3.up;
-
-            // return true
-            Debug.Log("CryptoHasValue: " + cryptoPref.HasValue);
+            _cryptoPref.Value = Vector3.up;
+            Debug.Log($"CryptoPref Decode: {_cryptoPref.Value}");
 
             // key and value are encrypted
             // return false
-            Debug.Log("PlayerPrefs.HasValue: " + PlayerPrefs.HasKey("vector3-crypto-test"));
+            Debug.Log($"PlayerPrefs.HasKey(\"vector3-crypto-test\"): {PlayerPrefs.HasKey("vector3-crypto-test")}");
         }
     }
 }
