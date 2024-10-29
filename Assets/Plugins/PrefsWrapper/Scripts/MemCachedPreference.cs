@@ -11,12 +11,12 @@ namespace PrefsWrapper
         private T _cache;
         private bool _hasValue;
 
-        public MemCachedPreference(string key, IPrefSerializer<T> serializer, T initialDefaultValue = default)
+        public MemCachedPreference(string key, IPrefSerializer<T> serializer)
         {
             _key = key;
             _serializer = serializer;
             _hasValue = PlayerPrefs.HasKey(key);
-            _cache = HasValue ? serializer.Deserialize(key) : initialDefaultValue;
+            _cache = HasValue ? serializer.Deserialize(key) : default;
         }
 
         public bool HasValue => _hasValue;
