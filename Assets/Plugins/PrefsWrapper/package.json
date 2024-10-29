@@ -1,7 +1,7 @@
 {
   "name": "com.doyasu24.prefswrapper",
   "displayName": "PrefsWrapper",
-  "version": "0.3.0",
+  "version": "1.0.1",
   "unity": "2021.3",
   "description": "Extensible PlayerPrefs wrapper",
   "license": "MIT",
