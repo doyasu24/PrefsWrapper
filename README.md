@@ -27,9 +27,7 @@ AES encryption support
 
 # Install
 
-You can add https://github.com/doyasu24/PrefsWrapper.git?path=Assets/Plugins/PrefsWrapper#1.0.0 to Package Manager
-
-or import unitypackage from release page.
+You can add https://github.com/doyasu24/PrefsWrapper.git?path=Assets/Plugins/PrefsWrapper#1.0.0 to Package Manager.
 
 see `Assets/Examples/Sample.unity` scene.
 
