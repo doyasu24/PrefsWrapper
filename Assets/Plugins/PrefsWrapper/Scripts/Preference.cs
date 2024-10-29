@@ -1,49 +1,42 @@
-﻿using UnityEngine;
-using System;
+﻿using System;
 using PrefsWrapper.Serializers;
+using UnityEngine;
 
 namespace PrefsWrapper
 {
     public class Preference<T> : IPreference<T>
     {
-        protected virtual string Key { get { return OrginalKey; } }
+        protected virtual string Key => OrginalKey;
         protected readonly string OrginalKey;
-        readonly IPrefSerializer<T> serializer;
+        private readonly IPrefSerializer<T> _serializer;
 
         public Preference(string key, IPrefSerializer<T> serializer)
         {
-            this.OrginalKey = key;
-            this.serializer = serializer;
+            OrginalKey = key;
+            _serializer = serializer;
         }
 
-        public bool HasValue { get { return PlayerPrefs.HasKey(Key); } }
+        public bool HasValue => PlayerPrefs.HasKey(Key);
 
         public T Value
         {
             get
             {
                 if (HasValue)
-                    return serializer.Deserialize(Key);
-                else
-                    throw new InvalidOperationException();
+                    return _serializer.Deserialize(Key);
+                throw new InvalidOperationException();
             }
-            set { serializer.Serialize(Key, value); }
+            set => _serializer.Serialize(Key, value);
         }
 
         public T GetValueOrDefault()
         {
-            if (HasValue)
-                return serializer.Deserialize(Key);
-            else
-                return default(T);
+            return HasValue ? _serializer.Deserialize(Key) : default;
         }
 
         public T GetValueOrDefault(T defaultValue)
         {
-            if (HasValue)
-                return serializer.Deserialize(Key);
-            else
-                return defaultValue;
+            return HasValue ? _serializer.Deserialize(Key) : defaultValue;
         }
 
         public void DeleteValue()
@@ -53,7 +46,7 @@ namespace PrefsWrapper
 
         public override string ToString()
         {
-            return string.Format("[Preference: Key-{0}, HasValue-{1}, ValueOrDefault-{2}]", Key, HasValue, GetValueOrDefault());
+            return $"[Preference: Key-{Key}, HasValue-{HasValue}, ValueOrDefault-{GetValueOrDefault()}]";
         }
     }
 }

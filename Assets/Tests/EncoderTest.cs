@@ -51,7 +51,7 @@ namespace PrefsWrapper.Encoders
             CollectionAssert.AreEqual(bytes, new byte[] { 0x01 });
             Assert.AreEqual(encoder.Decode(bytes), (byte)1);
         }
-        
+
         [Test]
         public void SByteEncode()
         {

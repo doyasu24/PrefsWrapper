@@ -6,8 +6,8 @@ namespace PrefsWrapper.Serializers
     {
         public SerializerException(string message, Exception innerException) : base(message, innerException)
         {
-
         }
+
         public SerializerException(string message) : base(message)
         {
         }

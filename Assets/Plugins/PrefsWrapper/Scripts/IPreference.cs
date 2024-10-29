@@ -1,5 +1,4 @@
-﻿
-namespace PrefsWrapper
+﻿namespace PrefsWrapper
 {
     public interface IPreference<T>
     {

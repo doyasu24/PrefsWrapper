@@ -1,5 +1,4 @@
-﻿
-namespace PrefsWrapper.Encoders
+﻿namespace PrefsWrapper.Encoders
 {
     public interface IEncoder<T>
     {

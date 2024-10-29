@@ -4,25 +4,25 @@ namespace PrefsWrapper.Serializers
 {
     public class EncodeSerializer<T> : IPrefSerializer<T>
     {
-        readonly IPrefSerializer<byte[]> serializer;
-        readonly IEncoder<T> encoder;
+        private readonly IPrefSerializer<byte[]> _serializer;
+        private readonly IEncoder<T> _encoder;
 
         public EncodeSerializer(IPrefSerializer<byte[]> serializer, IEncoder<T> encoder)
         {
-            this.serializer = serializer;
-            this.encoder = encoder;
+            _serializer = serializer;
+            _encoder = encoder;
         }
 
         public T Deserialize(string key)
         {
-            var bytes = serializer.Deserialize(key);
-            return encoder.Decode(bytes);
+            var bytes = _serializer.Deserialize(key);
+            return _encoder.Decode(bytes);
         }
 
         public void Serialize(string key, T value)
         {
-            var bytes = encoder.Encode(value);
-            serializer.Serialize(key, bytes);
+            var bytes = _encoder.Encode(value);
+            _serializer.Serialize(key, bytes);
         }
     }
 }

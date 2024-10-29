@@ -1,6 +1,6 @@
-﻿using PrefsWrapper.Serializers;
+﻿using System;
 using PrefsWrapper.Encoders;
-using System;
+using PrefsWrapper.Serializers;
 
 namespace PrefsWrapper
 {
@@ -84,12 +84,11 @@ namespace PrefsWrapper
             return CreatePref(new JsonPrefSerializer<T>(), key, enableMemCachePref);
         }
 
-        static IPreference<T> CreatePref<T>(IPrefSerializer<T> serializer, string key, bool enableMemCachePref)
+        private static IPreference<T> CreatePref<T>(IPrefSerializer<T> serializer, string key, bool enableMemCachePref)
         {
             if (enableMemCachePref)
                 return new MemCachedPreference<T>(key, serializer);
-            else
-                return new Preference<T>(key, serializer);
+            return new Preference<T>(key, serializer);
         }
 
         #endregion
@@ -172,7 +171,7 @@ namespace PrefsWrapper
             return CreateCryptoPref(key, password, salt, new JsonEncoder<T>());
         }
 
-        static IPreference<T> CreateCryptoPref<T>(string key, string password, string salt, IEncoder<T> encoder)
+        private static IPreference<T> CreateCryptoPref<T>(string key, string password, string salt, IEncoder<T> encoder)
         {
             var aesEncoder = new AesEncoder(password, salt);
             var combinedEncoder = new CombinedEncoder<T>(encoder, aesEncoder);
